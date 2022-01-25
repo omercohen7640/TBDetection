@@ -3,16 +3,18 @@ import numpy as np
 
 
 class DiffMap:
-    def __init__(self, X, y, t, epsilon, sigma):
+    def __init__(self, X, t, epsilon, sigma):
         self.X = X
         self.t = t
         self.epsilon = epsilon
         self.sigma = sigma
-        self.y = y
 
     def compute_eigen(self):
         K = distance.pdist(self.X, metric='euclidean')
         K = distance.squareform(K)
+        if isinstance(self.epsilon, str):
+            if self.epsilon == 'median':
+                self.epsilon = np.median(K)
         K = np.power(K, 2)/(2*np.power(self.epsilon, 2))
         K = np.exp(-K)
         # K[K < self.sigma] = 0
